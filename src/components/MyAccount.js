@@ -19,11 +19,11 @@ const MyAccount = () => {
     if (storedUser) {
       setUser(storedUser);
       setUserInfo({
-        name: storedUser.name,
-        email: storedUser.email,
-        address: storedUser.address,
+        name: storedUser.name || '',
+        email: storedUser.email || '',
+        address: storedUser.address || '',
       });
-      setOrderHistory(storedUser.orderHistory);
+      setOrderHistory(storedUser.orderHistory || []);
     }
   }, []);
 
@@ -42,6 +42,10 @@ const MyAccount = () => {
     setEditedInfo({ ...editedInfo, [name]: value });
   };
 
+  const handleSignUp = () => {
+    navigate('/signup');
+  };
+
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
@@ -52,9 +56,9 @@ const MyAccount = () => {
               Login
             </Link>
             <span className="mx-2">or</span>
-            <Link to="/signup" className="button button-secondary">
-              Signup
-            </Link>
+            <button onClick={handleSignUp} className="button button-secondary">
+              Sign Up
+            </button>
           </div>
         </div>
       </div>

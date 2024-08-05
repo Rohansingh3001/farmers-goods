@@ -1,0 +1,30 @@
+{
+    "home": {
+      "title": "Farmers Goods Marketplace",
+      "description": "Fresh produce delivered to your doorstep"
+    },
+    "navbar": {
+      "home": "Home",
+      "products": "Products",
+      "about": "About Us",
+      "contact": "Contact",
+      "myAccount": "My Account"
+    },
+    "products": {
+      "title": "Products",
+      "description": "Browse our wide selection of fresh produce."
+    },
+    "about": {
+      "title": "About Us",
+      "description": "Learn more about our mission and values."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "description": "Get in touch with us for any queries or support."
+    },
+    "myAccount": {
+      "title": "My Account",
+      "description": "Manage your account settings and view your orders."
+    }
+  }
+  

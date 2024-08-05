@@ -1,36 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Login = ({ setRole }) => {
+const FarmerLogin = ({ setRole }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (username === 'farmer') {
+    if (username === 'farmer' && password) {
       setRole('farmer');
       navigate('/farmer-dashboard');
     } else {
-      setRole('customer');
-      navigate('/customer-dashboard');
+      alert('Invalid credentials');
     }
-  };
-
-  const handleFarmerLogin = () => {
-    navigate('/farmer-login');
-  };
-
-  const handleForgotPassword = () => {
-    navigate('/forgot-password');
-  };
-
-  const handleSignUp = () => {
-    navigate('/sign-up');
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-      <h1 className="text-3xl font-bold mb-6">Login</h1>
+      <h1 className="text-3xl font-bold mb-6">Farmer Login</h1>
       <input
         type="text"
         className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
@@ -51,28 +38,8 @@ const Login = ({ setRole }) => {
       >
         Login
       </button>
-      <button
-        className="w-full max-w-md text-white bg-green-600 hover:bg-green-700 rounded-lg px-4 py-2 mb-4"
-        onClick={handleFarmerLogin}
-      >
-        Login as Farmer
-      </button>
-      <div className="flex justify-between w-full max-w-md">
-        <button
-          className="text-blue-600 hover:underline bg-transparent border-none p-0 cursor-pointer"
-          onClick={handleForgotPassword}
-        >
-          Forgot Password?
-        </button>
-        <button
-          className="text-blue-600 hover:underline bg-transparent border-none p-0 cursor-pointer"
-          onClick={handleSignUp}
-        >
-          Sign Up
-        </button>
-      </div>
     </div>
   );
 };
 
-export default Login;
+export default FarmerLogin;
