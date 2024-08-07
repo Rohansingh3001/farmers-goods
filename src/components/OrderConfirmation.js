@@ -12,8 +12,7 @@ const OrderConfirmation = () => {
   const [finalPrice, setFinalPrice] = useState(0);
   const navigate = useNavigate();
 
-  const cartItems = useMemo(() => JSON.parse(localStorage.getItem('cartItems')) || [], []);
-  const orderData = useMemo(() => JSON.parse(localStorage.getItem('orderData')) || {}, []);
+  let cartItems = [], orderData = {};
 
   const getTotalPrice = useCallback(() => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -24,6 +23,12 @@ const OrderConfirmation = () => {
     setFinalPrice(savedOrderData.finalPrice || getTotalPrice());
   }, [getTotalPrice]);
 
+  useEffect(() => {
+    cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    orderData = JSON.parse(localStorage.getItem('orderData')) || {};
+    console.log(cartItems, cartItems.reduce((total, item) => total + item.price * item.quantity, 0));
+  }, [localStorage])
+
   const handleAddressSubmit = (event) => {
     event.preventDefault();
     setIsAddressSubmitted(true);
@@ -31,7 +36,7 @@ const OrderConfirmation = () => {
 
   const handlePaymentSubmit = (event) => {
     event.preventDefault();
-    const discountedPrice = getTotalPrice(); 
+    const discountedPrice = getTotalPrice();
     setFinalPrice(discountedPrice);
 
     const finalOrderData = {
@@ -180,7 +185,6 @@ const OrderConfirmation = () => {
             </div>
             <div className="mb-4 text-right text-xl font-bold">
               <strong>Final Price: ₹{finalPrice.toFixed(2)}</strong>
-              {console.log(finalPrice)}
             </div>
             <button
               type="submit"
