@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const OrderConfirmation = () => {
@@ -12,22 +12,14 @@ const OrderConfirmation = () => {
   const [finalPrice, setFinalPrice] = useState(0);
   const navigate = useNavigate();
 
-  let cartItems = [], orderData = {};
-
-  const getTotalPrice = useCallback(() => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  }, [cartItems]);
-
   useEffect(() => {
     const savedOrderData = JSON.parse(localStorage.getItem('finalOrderData')) || {};
-    setFinalPrice(savedOrderData.finalPrice || getTotalPrice());
-  }, [getTotalPrice]);
+    const storedOrderData = JSON.parse(localStorage.getItem('orderData')) || {};
+    const storedCartItems = storedOrderData.items || [];
+    const totalPrice = storedCartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
-  useEffect(() => {
-    cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    orderData = JSON.parse(localStorage.getItem('orderData')) || {};
-    console.log(cartItems, cartItems.reduce((total, item) => total + item.price * item.quantity, 0));
-  }, [localStorage])
+    setFinalPrice(savedOrderData.finalPrice || totalPrice);
+  }, []);
 
   const handleAddressSubmit = (event) => {
     event.preventDefault();
@@ -36,17 +28,14 @@ const OrderConfirmation = () => {
 
   const handlePaymentSubmit = (event) => {
     event.preventDefault();
-    const discountedPrice = getTotalPrice();
-    setFinalPrice(discountedPrice);
 
     const finalOrderData = {
-      ...orderData,
       address,
       city,
       state,
       zip,
       paymentMethod,
-      finalPrice: discountedPrice
+      finalPrice,
     };
     localStorage.setItem('finalOrderData', JSON.stringify(finalOrderData));
     setIsPaymentSubmitted(true);
@@ -60,21 +49,6 @@ const OrderConfirmation = () => {
       return () => clearTimeout(timer);
     }
   }, [isPaymentSubmitted, navigate]);
-
-  const renderCartItems = () => {
-    return cartItems.map((item, index) => (
-      <div key={index} className="mb-4">
-        <div className="flex justify-between">
-          <span className="font-bold">{item.name}</span>
-          <span>₹{item.price.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Quantity: {item.quantity}</span>
-          <span>Total: ₹{(item.price * item.quantity).toFixed(2)}</span>
-        </div>
-      </div>
-    ));
-  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
@@ -144,7 +118,6 @@ const OrderConfirmation = () => {
         ) : (
           <form className="w-full max-w-lg p-6 bg-white border border-gray-200 rounded-lg shadow-lg" onSubmit={handlePaymentSubmit}>
             <h1 className="text-3xl font-bold mb-6">Payment Options</h1>
-            {renderCartItems()}
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">
                 Payment Method:
@@ -181,10 +154,7 @@ const OrderConfirmation = () => {
               </div>
             </div>
             <div className="mb-4 text-right">
-              <strong>Total: ₹{getTotalPrice().toFixed(2)}</strong>
-            </div>
-            <div className="mb-4 text-right text-xl font-bold">
-              <strong>Final Price: ₹{finalPrice.toFixed(2)}</strong>
+              <strong>Total: ₹{finalPrice.toFixed(2)}</strong>
             </div>
             <button
               type="submit"

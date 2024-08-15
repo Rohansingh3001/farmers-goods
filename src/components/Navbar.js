@@ -16,7 +16,6 @@ const Navbar = () => {
       </div>
       <div className="hidden md:flex space-x-6">
         <Link to="/" className="text-gray-800 hover:text-green-600">Home</Link>
-        <Link to="/products" className="text-gray-800 hover:text-green-600">Products</Link>
         <Link to="/about" className="text-gray-800 hover:text-green-600">About Us</Link>
         <Link to="/contact" className="text-gray-800 hover:text-green-600">Contact</Link>
         <Link to="/my-account" className="text-gray-800 hover:text-green-600">My Account</Link>
@@ -31,11 +30,9 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden absolute top-12 right-0 w-56 bg-white border border-gray-200 shadow-lg z-10">
           <Link to="/" className="block px-4 py-2 text-gray-800 hover:bg-gray-100" onClick={toggleMenu}>Home</Link>
-          <Link to="/products" className="block px-4 py-2 text-gray-800 hover:bg-gray-100" onClick={toggleMenu}>Products</Link>
           <Link to="/about" className="block px-4 py-2 text-gray-800 hover:bg-gray-100" onClick={toggleMenu}>About Us</Link>
           <Link to="/contact" className="block px-4 py-2 text-gray-800 hover:bg-gray-100" onClick={toggleMenu}>Contact</Link>
           <Link to="/my-account" className="block px-4 py-2 text-gray-800 hover:bg-gray-100" onClick={toggleMenu}>My Account</Link>
-          
         </div>
       )}
     </nav>

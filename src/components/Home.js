@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import FarmerView from './FarmerView';
 import CustomerView from './CustomerView';
 import CartPopup from './CartPopup';
@@ -25,20 +25,6 @@ const Home = () => {
     setShowCart((prevShowCart) => !prevShowCart);
   };
 
-  const addToCart = (item) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i.id === item.id);
-      if (existingItem) {
-        return prevItems.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      } else {
-        return [...prevItems, { ...item, quantity: 1 }];
-      }
-    });
-    setShowCart(true);
-  };
-
   const proceedToCheckout = () => {
     toggleCart();
     navigate('/order');
@@ -49,7 +35,9 @@ const Home = () => {
       {role === 'farmer' ? (
         <FarmerView />
       ) : (
-        <CustomerView addToCart={addToCart} />
+        <>
+          <CustomerView viewProducts={() => navigate('/products')} />
+        </>
       )}
       {showCart && (
         <CartPopup

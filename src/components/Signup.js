@@ -1,45 +1,99 @@
-import React from 'react';
+// src/components/SignUp.js
+
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase';
 
 const SignUp = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [role, setRole] = useState('customer'); // default to customer
+  const [name, setName] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [productType, setProductType] = useState(''); // Dropdown value for farmers
   const navigate = useNavigate();
 
-  const handleFarmerLogin = () => {
-    navigate('/farmer-login');
+  const handleSignUp = async () => {
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      // Optionally, set custom user roles in Firebase here
+      // You can use Firestore or Realtime Database to save additional user information
+      navigate('/login');
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-900">Sign Up for Farmer Goods</h2>
-        <form className="space-y-4">
-          <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="name">Full Name</label>
-            <input type="text" id="name" className="block w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="John Doe" required />
-          </div>
-          <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="email">Email</label>
-            <input type="email" id="email" className="block w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="example@example.com" required />
-          </div>
-          <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="password">Password</label>
-            <input type="password" id="password" className="block w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="********" required />
-          </div>
-          <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="confirm-password">Confirm Password</label>
-            <input type="password" id="confirm-password" className="block w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="********" required />
-          </div>
-          <button type="submit" className="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300">Sign Up</button>
-        </form>
-        <div className="flex justify-between mt-4">
-          <button
-            className="text-blue-600 hover:underline bg-transparent border-none p-0 cursor-pointer"
-            onClick={handleFarmerLogin}
-          >
-            Login as Farmer
-          </button>
-        </div>
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+      <h1 className="text-3xl font-bold mb-6">Sign Up</h1>
+      <input
+        type="text"
+        className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <input
+        type="text"
+        className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
+        placeholder="Mobile Number"
+        value={mobile}
+        onChange={(e) => setMobile(e.target.value)}
+      />
+      <input
+        type="email"
+        className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <input
+        type="password"
+        className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
+        placeholder="Confirm Password"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+      />
+      <select
+        className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+      >
+        <option value="customer">Customer</option>
+        <option value="farmer">Farmer</option>
+      </select>
+      {role === 'farmer' && (
+        <select
+          className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
+          value={productType}
+          onChange={(e) => setProductType(e.target.value)}
+        >
+          <option value="">Select Product Type</option>
+          <option value="freshVegetables">Fresh Vegetables</option>
+          <option value="organicFruits">Organic Fruits</option>
+          <option value="dairyProducts">Dairy Products</option>
+        </select>
+      )}
+      <button
+        className="w-full max-w-md text-white bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2"
+        onClick={handleSignUp}
+      >
+        Sign Up
+      </button>
     </div>
   );
 };

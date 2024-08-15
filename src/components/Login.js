@@ -1,18 +1,23 @@
+// src/components/Login.js
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase';
 
 const Login = ({ setRole }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (username === 'farmer') {
-      setRole('farmer');
-      navigate('/farmer-dashboard');
-    } else {
-      setRole('customer');
-      navigate('/customer-dashboard');
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // Set the role based on user type (you can use custom claims for this)
+      setRole('customer'); // or 'farmer' based on your app logic
+      navigate('/customer-dashboard'); // Navigate to the appropriate dashboard
+    } catch (error) {
+      alert(error.message);
     }
   };
 
@@ -25,18 +30,18 @@ const Login = ({ setRole }) => {
   };
 
   const handleSignUp = () => {
-    navigate('/sign-up');
+    navigate('/signup');
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
       <h1 className="text-3xl font-bold mb-6">Login</h1>
       <input
-        type="text"
+        type="email"
         className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <input
         type="password"
@@ -68,7 +73,7 @@ const Login = ({ setRole }) => {
           className="text-blue-600 hover:underline bg-transparent border-none p-0 cursor-pointer"
           onClick={handleSignUp}
         >
-          Sign Up
+          SignUp
         </button>
       </div>
     </div>
