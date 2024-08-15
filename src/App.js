@@ -10,12 +10,13 @@ import Contact from './components/Contact';
 import Order from './components/Order';
 import MyAccount from './components/MyAccount';
 import Login from './components/Login';
-import SignUp from './components/Signup'; // Fixed import capitalization
+import SignUp from './components/Signup';
 import FarmerLogin from './components/FarmerLogin';
-import FarmerSignUp from './components/FarmerSignUp'; // Import the FarmerSignUp component
+import FarmerSignUp from './components/FarmerSignUp';
 import Footer from './components/Footer';
 import CartPopup from './components/CartPopup';
 import OrderConfirmation from './components/OrderConfirmation';
+import FarmerDashboard from './components/FarmerDashboard'; // Import the FarmerDashboard component
 
 import './index.css';
 import './i18n';
@@ -26,13 +27,11 @@ const App = () => {
   const [role, setRole] = useState('customer');
 
   useEffect(() => {
-    // Load cart items from local storage on initial render
     const storedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
     setCartItems(storedCartItems);
   }, []);
 
   useEffect(() => {
-    // Save cart items to local storage whenever cartItems changes
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
 
@@ -45,7 +44,9 @@ const App = () => {
       const existingItem = prevItems.find((i) => i.id === item.id && i.seller === item.seller);
       if (existingItem) {
         return prevItems.map((i) =>
-          i.id === item.id && i.seller === item.seller ? { ...i, quantity: i.quantity + item.quantity } : i
+          i.id === item.id && i.seller === item.seller
+            ? { ...i, quantity: i.quantity + item.quantity }
+            : i
         );
       } else {
         return [...prevItems, { ...item, quantity: item.quantity }];
@@ -63,9 +64,7 @@ const App = () => {
   };
 
   const removeCartItem = (itemId) => {
-    setCartItems((prevItems) =>
-      prevItems.filter((item) => item.id !== itemId)
-    );
+    setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
   };
 
   const proceedToCheckout = () => {
@@ -77,7 +76,16 @@ const App = () => {
       <Navbar onCartClick={toggleCart} />
       <div className="App">
         <Routes>
-          <Route path="/" element={<Home role={role} addToCart={addToCart} />} />
+          <Route
+            path="/"
+            element={
+              role === 'farmer' ? (
+                <FarmerDashboard />
+              ) : (
+                <Home role={role} addToCart={addToCart} />
+              )
+            }
+          />
           <Route path="/products/fresh-vegetables" element={<FreshVegetables addToCart={addToCart} />} />
           <Route path="/products/organic-fruits" element={<OrganicFruits addToCart={addToCart} />} />
           <Route path="/products/dairy-products" element={<DairyProducts addToCart={addToCart} />} />
@@ -96,9 +104,9 @@ const App = () => {
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="/my-account" element={<MyAccount />} />
           <Route path="/login" element={<Login setRole={setRole} />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/sign-up" element={<SignUp />} />
           <Route path="/farmer-login" element={<FarmerLogin setRole={setRole} />} />
-          <Route path="/farmer-signup" element={<FarmerSignUp />} /> {/* Added route for Farmer Sign Up */}
+          <Route path="/farmer-signup" element={<FarmerSignUp />} />
         </Routes>
         {showCart && (
           <CartPopup

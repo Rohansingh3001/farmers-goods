@@ -1,6 +1,6 @@
 // src/components/FarmerDashboard.js
 import React from 'react';
-import ProductUpload from './ProductUpload';
+import ProductUpload from './ProductUploadForm';
 
 const FarmerDashboard = ({ products, onProductUpload }) => {
   return (
