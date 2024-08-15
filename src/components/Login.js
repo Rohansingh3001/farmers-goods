@@ -1,9 +1,9 @@
 // src/components/Login.js
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 const Login = ({ setRole }) => {
   const [email, setEmail] = useState('');
@@ -12,10 +12,23 @@ const Login = ({ setRole }) => {
 
   const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      // Set the role based on user type (you can use custom claims for this)
-      setRole('customer'); // or 'farmer' based on your app logic
-      navigate('/customer-dashboard'); // Navigate to the appropriate dashboard
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Fetch user role from Firestore
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        setRole(userData.role);
+
+        if (userData.role === 'farmer') {
+          navigate('/farmer-dashboard');
+        } else {
+          navigate('/customer-dashboard');
+        }
+      } else {
+        alert('No such user!');
+      }
     } catch (error) {
       alert(error.message);
     }
@@ -30,7 +43,7 @@ const Login = ({ setRole }) => {
   };
 
   const handleSignUp = () => {
-    navigate('/signup');
+    navigate('/sign-up');
   };
 
   return (
@@ -73,7 +86,7 @@ const Login = ({ setRole }) => {
           className="text-blue-600 hover:underline bg-transparent border-none p-0 cursor-pointer"
           onClick={handleSignUp}
         >
-          SignUp
+          Sign Up
         </button>
       </div>
     </div>
