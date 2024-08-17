@@ -9,7 +9,7 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [role, setRole] = useState('customer'); // default to customer
+  const [role, setRole] = useState('customer'); // Default role is customer
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
   const [productType, setProductType] = useState(''); // Dropdown value for farmers
@@ -29,7 +29,7 @@ const SignUp = () => {
         name,
         mobile,
         role,
-        productType
+        productType: role === 'farmer' ? productType : null // Only save productType if the user is a farmer
       });
 
       navigate('/login');

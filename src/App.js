@@ -16,7 +16,7 @@ import FarmerSignUp from './components/FarmerSignUp';
 import Footer from './components/Footer';
 import CartPopup from './components/CartPopup';
 import OrderConfirmation from './components/OrderConfirmation';
-import FarmerDashboard from './components/FarmerDashboard'; // Import the FarmerDashboard component
+import FarmerDashboard from './components/FarmerDashboard';
 
 import './index.css';
 import './i18n';
@@ -104,7 +104,7 @@ const App = () => {
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="/my-account" element={<MyAccount />} />
           <Route path="/login" element={<Login setRole={setRole} />} />
-          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/farmer-login" element={<FarmerLogin setRole={setRole} />} />
           <Route path="/farmer-signup" element={<FarmerSignUp />} />
         </Routes>

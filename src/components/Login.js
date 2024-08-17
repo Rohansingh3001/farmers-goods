@@ -5,9 +5,10 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-const Login = ({ setRole }) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('customer'); // default to customer
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -16,26 +17,24 @@ const Login = ({ setRole }) => {
       const user = userCredential.user;
 
       // Fetch user role from Firestore
-      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      const collection = role === 'farmer' ? 'farmersCredentials' : 'customerCredentials';
+      const userDoc = await getDoc(doc(db, collection, user.uid));
+
       if (userDoc.exists()) {
         const userData = userDoc.data();
-        setRole(userData.role);
 
-        if (userData.role === 'farmer') {
+        // Navigate based on user role
+        if (role === 'farmer') {
           navigate('/farmer-dashboard');
         } else {
           navigate('/customer-dashboard');
         }
       } else {
-        alert('No such user!');
+        alert('No user data found!');
       }
     } catch (error) {
       alert(error.message);
     }
-  };
-
-  const handleFarmerLogin = () => {
-    navigate('/farmer-login');
   };
 
   const handleForgotPassword = () => {
@@ -49,6 +48,14 @@ const Login = ({ setRole }) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
       <h1 className="text-3xl font-bold mb-6">Login</h1>
+      <select
+        className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+      >
+        <option value="customer">Customer</option>
+        <option value="farmer">Farmer</option>
+      </select>
       <input
         type="email"
         className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
@@ -68,12 +75,6 @@ const Login = ({ setRole }) => {
         onClick={handleLogin}
       >
         Login
-      </button>
-      <button
-        className="w-full max-w-md text-white bg-green-600 hover:bg-green-700 rounded-lg px-4 py-2 mb-4"
-        onClick={handleFarmerLogin}
-      >
-        Login as Farmer
       </button>
       <div className="flex justify-between w-full max-w-md">
         <button
