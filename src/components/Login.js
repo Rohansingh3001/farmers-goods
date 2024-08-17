@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   const handleSignUp = () => {
-    navigate('/sign-up');
+    navigate('/signup'); // This will work correctly
   };
 
   return (
@@ -85,7 +85,7 @@ const Login = () => {
         </button>
         <button
           className="text-blue-600 hover:underline bg-transparent border-none p-0 cursor-pointer"
-          onClick={handleSignUp}
+          onClick={handleSignUp} // Properly references the handleSignUp function
         >
           Sign Up
         </button>
