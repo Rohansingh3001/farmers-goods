@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
@@ -225,6 +225,14 @@ const RegisterPage = () => {
             Register
           </button>
         </form>
+
+        {/* Login Link */}
+        <p className="text-center mt-4">
+          Already have an account?{' '}
+          <Link to="/login" className="text-green-600 hover:underline">
+            Log in here
+          </Link>
+        </p>
       </div>
     </div>
   );
