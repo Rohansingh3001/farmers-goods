@@ -1,28 +1,29 @@
-// src/components/FarmerLogin.js
+// src/components/CustomerSignUp.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
-const FarmerLogin = () => {
+const CustomerSignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleSignUp = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Fetch farmer data from Firestore
-      const userDoc = await getDoc(doc(db, 'farmersCredentials', user.uid));
+      // Store customer’s additional data in Firestore
+      await setDoc(doc(db, 'customerCredentials', user.uid), {
+        name,
+        email,
+        role: 'customer',
+      });
 
-      if (userDoc.exists()) {
-        navigate('/farmer-dashboard'); // Redirect to farmer's dashboard
-      } else {
-        alert('No farmer data found!');
-      }
+      navigate('/customer-dashboard'); // Redirect to customer's dashboard
     } catch (error) {
       alert(error.message);
     }
@@ -30,7 +31,14 @@ const FarmerLogin = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-      <h1 className="text-3xl font-bold mb-6">Farmer Login</h1>
+      <h1 className="text-3xl font-bold mb-6">Customer Sign Up</h1>
+      <input
+        type="text"
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
+      />
       <input
         type="email"
         placeholder="Email"
@@ -46,13 +54,13 @@ const FarmerLogin = () => {
         className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
       />
       <button
-        onClick={handleLogin}
+        onClick={handleSignUp}
         className="w-full max-w-md text-white bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2"
       >
-        Login
+        Sign Up
       </button>
     </div>
   );
 };
 
-export default FarmerLogin;
+export default CustomerSignUp;

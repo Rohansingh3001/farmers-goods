@@ -1,11 +1,11 @@
-// src/components/FarmerLogin.js
+// src/components/CustomerLogin.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-const FarmerLogin = () => {
+const CustomerLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -15,13 +15,13 @@ const FarmerLogin = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Fetch farmer data from Firestore
-      const userDoc = await getDoc(doc(db, 'farmersCredentials', user.uid));
+      // Fetch customer data from Firestore
+      const userDoc = await getDoc(doc(db, 'customerCredentials', user.uid));
 
       if (userDoc.exists()) {
-        navigate('/farmer-dashboard'); // Redirect to farmer's dashboard
+        navigate('/customer-dashboard'); // Redirect to customer's dashboard
       } else {
-        alert('No farmer data found!');
+        alert('No customer data found!');
       }
     } catch (error) {
       alert(error.message);
@@ -30,7 +30,7 @@ const FarmerLogin = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-      <h1 className="text-3xl font-bold mb-6">Farmer Login</h1>
+      <h1 className="text-3xl font-bold mb-6">Customer Login</h1>
       <input
         type="email"
         placeholder="Email"
@@ -55,4 +55,4 @@ const FarmerLogin = () => {
   );
 };
 
-export default FarmerLogin;
+export default CustomerLogin;

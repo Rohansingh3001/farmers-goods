@@ -1,40 +1,115 @@
-// src/auth.js
-import { auth, db } from './firebase'; // Adjust the import path if necessary
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+// src/components/Auth.js
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase';
 
-// Farmer Login Function
-export const loginFarmer = async (email, password) => {
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
+const Auth = () => {
+  const [isSignUp, setIsSignUp] = useState(true);
+  const [role, setRole] = useState('customer');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-    // Check if the user exists in the farmersCredentials collection
-    const farmerDoc = await getDoc(doc(db, 'farmersCredentials', user.uid));
-    if (farmerDoc.exists()) {
-      return { success: true, user: farmerDoc.data() };
-    } else {
-      throw new Error('No farmer data found');
+  const handleAuth = async () => {
+    setError(''); // Clear any previous error messages
+    try {
+      if (isSignUp) {
+        // Sign-Up Logic
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Define collection based on role
+        const collection = role === 'farmer' ? 'farmersCredentials' : 'customerCredentials';
+
+        // Save additional user data in Firestore
+        await setDoc(doc(db, collection, user.uid), {
+          name,
+          email,
+          role,
+        });
+
+        // Navigate to the appropriate dashboard
+        navigate(role === 'farmer' ? '/farmer-dashboard' : '/customer-dashboard');
+      } else {
+        // Login Logic
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Determine the correct collection based on the role
+        const collection = role === 'farmer' ? 'farmersCredentials' : 'customerCredentials';
+        const userDoc = await getDoc(doc(db, collection, user.uid));
+
+        if (userDoc.exists()) {
+          // Redirect based on role
+          navigate(role === 'farmer' ? '/farmer-dashboard' : '/customer-dashboard');
+        } else {
+          setError('No user data found for this account.');
+        }
+      }
+    } catch (error) {
+      setError(error.message); // Show error message on failure
     }
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+      <h1 className="text-3xl font-bold mb-6">
+        {isSignUp ? 'Sign Up' : 'Login'} as {role.charAt(0).toUpperCase() + role.slice(1)}
+      </h1>
+      {error && <p className="text-red-500 mb-4">{error}</p>} {/* Display error message */}
+      {isSignUp && (
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
+        />
+      )}
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
+      />
+      <button
+        onClick={handleAuth}
+        className="w-full max-w-md text-white bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2"
+      >
+        {isSignUp ? 'Sign Up' : 'Login'}
+      </button>
+      <div className="mt-4">
+        <span
+          onClick={() => setIsSignUp(!isSignUp)}
+          className="text-blue-600 cursor-pointer"
+        >
+          {isSignUp ? 'Already have an account? Login' : 'Don’t have an account? Sign Up'}
+        </span>
+      </div>
+      <div className="mt-4">
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          className="border border-gray-300 p-2 rounded"
+        >
+          <option value="customer">Customer</option>
+          <option value="farmer">Farmer</option>
+        </select>
+      </div>
+    </div>
+  );
 };
 
-// Customer Login Function
-export const loginCustomer = async (email, password) => {
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-
-    // Check if the user exists in the customerCredentials collection
-    const customerDoc = await getDoc(doc(db, 'customerCredentials', user.uid));
-    if (customerDoc.exists()) {
-      return { success: true, user: customerDoc.data() };
-    } else {
-      throw new Error('No customer data found');
-    }
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-};
+export default Auth;

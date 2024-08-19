@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -9,14 +10,15 @@ import About from './components/About';
 import Contact from './components/Contact';
 import Order from './components/Order';
 import MyAccount from './components/MyAccount';
-import Login from './components/Login';
-import SignUp from './components/Signup';
+import Login from './components/LoginPage';
+import SignUp from './components/RegisterPage';
 import FarmerLogin from './components/FarmerLogin';
 import FarmerSignUp from './components/FarmerSignUp';
 import Footer from './components/Footer';
 import CartPopup from './components/CartPopup';
 import OrderConfirmation from './components/OrderConfirmation';
 import FarmerDashboard from './components/FarmerDashboard';
+import CustomerDashboard from './components/CustomerDashboard';
 
 import './index.css';
 import './i18n';
@@ -24,7 +26,7 @@ import './i18n';
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
   const [showCart, setShowCart] = useState(false);
-  const [role, setRole] = useState('customer');
+  const [role, setRole] = useState('customer'); // Default to customer role
 
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
@@ -76,16 +78,7 @@ const App = () => {
       <Navbar onCartClick={toggleCart} />
       <div className="App">
         <Routes>
-          <Route
-            path="/"
-            element={
-              role === 'farmer' ? (
-                <FarmerDashboard />
-              ) : (
-                <Home role={role} addToCart={addToCart} />
-              )
-            }
-          />
+          <Route path="/" element={<Home role={role} addToCart={addToCart} />} />
           <Route path="/products/fresh-vegetables" element={<FreshVegetables addToCart={addToCart} />} />
           <Route path="/products/organic-fruits" element={<OrganicFruits addToCart={addToCart} />} />
           <Route path="/products/dairy-products" element={<DairyProducts addToCart={addToCart} />} />
@@ -107,6 +100,8 @@ const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/farmer-login" element={<FarmerLogin setRole={setRole} />} />
           <Route path="/farmer-signup" element={<FarmerSignUp />} />
+          <Route path="/farmer-dashboard" element={<FarmerDashboard />} />
+          <Route path="/customer-dashboard" element={<CustomerDashboard />} />
         </Routes>
         {showCart && (
           <CartPopup
