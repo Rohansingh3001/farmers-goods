@@ -44,8 +44,16 @@ const Auth = () => {
         const userDoc = await getDoc(doc(db, collection, user.uid));
 
         if (userDoc.exists()) {
+          const userData = userDoc.data();
+
           // Redirect based on role
-          navigate(role === 'farmer' ? '/farmer-dashboard' : '/customer-dashboard');
+          if (userData.role === 'farmer') {
+            navigate('/farmer-dashboard');
+          } else if (userData.role === 'customer') {
+            navigate('/customer-dashboard');
+          } else {
+            setError('Role mismatch. Please check your role.');
+          }
         } else {
           setError('No user data found for this account.');
         }
