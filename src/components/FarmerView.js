@@ -1,7 +1,7 @@
 // src/components/FarmerView.js
 import React from 'react';
 import ProductUpload from './ProductUploadForm';
-
+import './styles.css';
 const FarmerView = ({ products, onProductUpload }) => (
   <>
     <h1 className="text-3xl font-bold mt-6 text-center">Farmers Goods Marketplace - Farmer Dashboard</h1>
