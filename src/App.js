@@ -9,6 +9,7 @@ import DairyProducts from './components/products/DairyProducts';
 import About from './components/About';
 import Contact from './components/Contact';
 import Order from './components/Order';
+import MyAccount from './components/MyAccount';
 import Login from './components/LoginPage';
 import SignUp from './components/RegisterPage';
 import FarmerLogin from './components/FarmerLogin';
