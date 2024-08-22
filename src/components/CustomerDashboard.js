@@ -1,5 +1,6 @@
 // src/components/CustomerDashboard.js
 import React from 'react';
+import CustomerView from './CustomerView';
 
 const CustomerDashboard = () => {
   return (

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
@@ -71,9 +71,9 @@ const RegisterPage = () => {
 
       // Redirect based on the role
       if (role === 'customer') {
-        navigate('/customer-dashboard');
+        navigate('/MyAccount');
       } else if (role === 'farmer') {
-        navigate('/farmer-dashboard');
+        navigate('/MyAccount');
       }
     } catch (error) {
       console.error('Registration error:', error.message);

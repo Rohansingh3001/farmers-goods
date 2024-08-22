@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -24,6 +25,7 @@ const LoginPage = () => {
   const [role, setRole] = useState('customer'); // Default role is customer
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -45,24 +47,24 @@ const LoginPage = () => {
       if (userDoc.exists()) {
         const userData = userDoc.data();
         const storedRole = userData.role;
-
+        localStorage.setItem("user", JSON.stringify(userData))
         // Check if the stored role matches the selected role during login
         if (storedRole === role) {
           // Navigate based on the role
           if (role === 'customer') {
-            navigate('/customer-dashboard');
+            navigate('/MyAccount');
           } else if (role === 'farmer') {
-            navigate('/farmer-dashboard');
+            navigate('/MyAccount');
           }
         } else {
-          setError('Incorrect role selected. Please check your role.');
+          setError('Incorrect role selected. Please verify your role.');
         }
       } else {
         setError('User data not found.');
       }
     } catch (error) {
       console.error('Login error:', error.message);
-      setError(error.message);
+      setError('Login failed. Please check your credentials and try again.');
     }
   };
 
@@ -101,16 +103,25 @@ const LoginPage = () => {
           </div>
 
           {/* Password Input */}
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <label className="block text-gray-700 font-semibold mb-2">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full p-2 border border-gray-300 rounded"
-              placeholder="Enter your password"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full p-2 border border-gray-300 rounded pr-10"
+                placeholder="Enter your password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 flex items-center pr-3"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
 
           {/* Login Button */}

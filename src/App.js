@@ -1,6 +1,6 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import FreshVegetables from './components/products/FreshVegetables';
@@ -27,6 +27,7 @@ const App = () => {
   const [cartItems, setCartItems] = useState([]);
   const [showCart, setShowCart] = useState(false);
   const [role, setRole] = useState('customer'); // Default to customer role
+  const [user, setUser] = useState(null); // State to store user info
 
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
@@ -36,6 +37,14 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      setUser(storedUser);
+      setRole(storedUser.role);
+    }
+  }, []);
 
   const toggleCart = () => {
     setShowCart(!showCart);
@@ -95,13 +104,20 @@ const App = () => {
             }
           />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
-          <Route path="/my-account" element={<MyAccount />} />
+          <Route
+            path="/MyAccount"
+            element={
+              user ? (
+                role === 'farmer' ? <FarmerDashboard /> : <CustomerDashboard />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
           <Route path="/login" element={<Login setRole={setRole} />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/farmer-login" element={<FarmerLogin setRole={setRole} />} />
           <Route path="/farmer-signup" element={<FarmerSignUp />} />
-          <Route path="/farmer-dashboard" element={<FarmerDashboard />} />
-          <Route path="/customer-dashboard" element={<CustomerDashboard />} />
         </Routes>
         {showCart && (
           <CartPopup

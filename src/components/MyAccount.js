@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { auth, db, storage } from '../firebase'; // Import your Firebase configuration
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import './styles.css'; // Import your CSS file
 
 const MyAccount = () => {
@@ -8,33 +11,57 @@ const MyAccount = () => {
     name: '',
     email: '',
     address: '',
+    role: '',
+    profilePicture: '',
   });
   const [orderHistory, setOrderHistory] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editedInfo, setEditedInfo] = useState({ ...userInfo });
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [farmerOrders, setFarmerOrders] = useState([]);
+  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser) {
-      setUser(storedUser);
-      setUserInfo({
-        name: storedUser.name || '',
-        email: storedUser.email || '',
-        address: storedUser.address || '',
-      });
-      setOrderHistory(storedUser.orderHistory || []);
-    }
-  }, []);
+    const fetchUserData = async () => {
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      if (storedUser) {
+        const userRef = doc(db, 'users', storedUser.uid);
+        const userSnapshot = await getDoc(userRef);
+        if (userSnapshot.exists()) {
+          const userData = userSnapshot.data();
+          setUser(storedUser);
+          setUserInfo({
+            name: userData.name || '',
+            email: userData.email || '',
+            address: userData.address || '',
+            role: userData.role || '',
+            profilePicture: userData.profilePicture || '',
+          });
+          setOrderHistory(userData.orderHistory || []);
+          setSavedAddresses(userData.savedAddresses || []);
+          setFarmerOrders(userData.farmerOrders || []);
+        }
+      } else {
+        navigate('/login');
+      }
+    };
+    fetchUserData();
+  }, [navigate]);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
-    setUserInfo(editedInfo);
-    localStorage.setItem('user', JSON.stringify({ ...user, ...editedInfo }));
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, editedInfo);
+      setUserInfo(editedInfo);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
   };
 
   const handleChange = (e) => {
@@ -42,109 +69,144 @@ const MyAccount = () => {
     setEditedInfo({ ...editedInfo, [name]: value });
   };
 
-  const handleSignUp = () => {
-    navigate('/signup');
+  const handleOrderStatusChange = async (orderId, status) => {
+    const updatedOrders = farmerOrders.map(order =>
+      order.id === orderId ? { ...order, status } : order
+    );
+    setFarmerOrders(updatedOrders);
+    const userRef = doc(db, 'users', user.uid);
+    await updateDoc(userRef, { farmerOrders: updatedOrders });
   };
 
-  if (!user) {
-    return (
-      <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold">Please log in to access your account</h1>
-          <div className="mt-4">
-            <Link to="/login" className="button mr-2">
-              Login
-            </Link>
-            <span className="mx-2">or</span>
-            <button onClick={handleSignUp} className="button button-secondary">
-              Sign Up
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handleProfilePictureUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUploading(true);
+      const storageRef = ref(storage, `profilePictures/${user.uid}`);
+      try {
+        await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(storageRef);
+        const userRef = doc(db, 'users', user.uid);
+        await updateDoc(userRef, { profilePicture: downloadURL });
+        setUserInfo((prevInfo) => ({ ...prevInfo, profilePicture: downloadURL }));
+      } catch (error) {
+        console.error('Error uploading profile picture:', error);
+      } finally {
+        setUploading(false);
+      }
+    }
+  };
 
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-      <h1 className="text-3xl font-bold mt-6">My Account</h1>
-      <div className="w-full max-w-2xl p-6 mt-6 bg-white border border-gray-200 rounded-lg shadow">
-        <h2 className="text-2xl font-semibold mb-4">Profile Information</h2>
+  const renderCustomerProfile = () => (
+    <div className="space-y-4">
+      <div className="flex items-center">
+        <img
+          src={userInfo.profilePicture || '/default-avatar.png'}
+          alt="Profile"
+          className="w-24 h-24 rounded-full"
+        />
+        <input type="file" onChange={handleProfilePictureUpload} />
+        {uploading && <p>Uploading...</p>}
+      </div>
+      <div className="space-y-2">
+        <h2 className="text-xl font-bold">Customer Profile</h2>
+        <p><strong>Name:</strong> {userInfo.name}</p>
+        <p><strong>Email:</strong> {userInfo.email}</p>
+        <p><strong>Address:</strong> {userInfo.address}</p>
         {isEditing ? (
-          <div className="space-y-4">
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="name">Full Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                className="block w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                value={editedInfo.name}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                className="block w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                value={editedInfo.email}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="address">Address</label>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                className="block w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                value={editedInfo.address}
-                onChange={handleChange}
-              />
-            </div>
-            <button
-              onClick={handleSave}
-              className="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
-            >
-              Save
-            </button>
+          <div className="space-y-2">
+            <input
+              type="text"
+              name="name"
+              value={editedInfo.name}
+              onChange={handleChange}
+              placeholder="Name"
+              className="border p-2"
+            />
+            <input
+              type="text"
+              name="address"
+              value={editedInfo.address}
+              onChange={handleChange}
+              placeholder="Address"
+              className="border p-2"
+            />
+            <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2">Save</button>
           </div>
         ) : (
-          <div className="space-y-4">
-            <p><strong>Name:</strong> {userInfo.name}</p>
-            <p><strong>Email:</strong> {userInfo.email}</p>
-            <p><strong>Address:</strong> {userInfo.address}</p>
-            <button
-              onClick={handleEdit}
-              className="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
-            >
-              Edit
-            </button>
-          </div>
+          <button onClick={handleEdit} className="bg-blue-500 text-white px-4 py-2">Edit</button>
         )}
       </div>
+    </div>
+  );
 
-      <div className="w-full max-w-2xl p-6 mt-6 bg-white border border-gray-200 rounded-lg shadow">
-        <h2 className="text-2xl font-semibold mb-4">Order History</h2>
-        <div className="space-y-4">
-          {orderHistory.length > 0 ? (
-            orderHistory.map(order => (
-              <div key={order.id} className="flex justify-between items-center p-4 bg-gray-50 border rounded-lg">
-                <div>
-                  <h3 className="text-lg font-bold">{order.name}</h3>
-                  <p className="text-gray-600">₹{order.price} x {order.quantity}</p>
-                  <p className="text-gray-600">Ordered on: {order.date}</p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-600">No orders yet.</p>
-          )}
-        </div>
+  const renderFarmerProfile = () => (
+    <div className="space-y-4">
+      <div className="flex items-center">
+        <img
+          src={userInfo.profilePicture || '/default-avatar.png'}
+          alt="Profile"
+          className="w-24 h-24 rounded-full"
+        />
+        <input type="file" onChange={handleProfilePictureUpload} />
+        {uploading && <p>Uploading...</p>}
       </div>
+      <div className="space-y-2">
+        <h2 className="text-xl font-bold">Farmer Profile</h2>
+        <p><strong>Name:</strong> {userInfo.name}</p>
+        <p><strong>Email:</strong> {userInfo.email}</p>
+        <p><strong>Address:</strong> {userInfo.address}</p>
+        {isEditing ? (
+          <div className="space-y-2">
+            <input
+              type="text"
+              name="name"
+              value={editedInfo.name}
+              onChange={handleChange}
+              placeholder="Name"
+              className="border p-2"
+            />
+            <input
+              type="text"
+              name="address"
+              value={editedInfo.address}
+              onChange={handleChange}
+              placeholder="Address"
+              className="border p-2"
+            />
+            <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2">Save</button>
+          </div>
+        ) : (
+          <button onClick={handleEdit} className="bg-blue-500 text-white px-4 py-2">Edit</button>
+        )}
+      </div>
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold">Orders</h2>
+        {farmerOrders.length ? (
+          <ul>
+            {farmerOrders.map((order) => (
+              <li key={order.id} className="border p-4 mb-2">
+                <p><strong>Order ID:</strong> {order.id}</p>
+                <p><strong>Status:</strong> {order.status}</p>
+                <button
+                  onClick={() => handleOrderStatusChange(order.id, 'completed')}
+                  className="bg-green-500 text-white px-4 py-2"
+                >
+                  Mark as Completed
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No orders available.</p>
+        )}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="p-4">
+      {userInfo.role === 'farmer' ? renderFarmerProfile() : renderCustomerProfile()}
     </div>
   );
 };
