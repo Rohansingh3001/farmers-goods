@@ -12,8 +12,7 @@ import Order from './components/Order';
 import MyAccount from './components/MyAccount';
 import Login from './components/LoginPage';
 import SignUp from './components/RegisterPage';
-import FarmerLogin from './components/FarmerLogin';
-import FarmerSignUp from './components/FarmerSignUp';
+
 import Footer from './components/Footer';
 import CartPopup from './components/CartPopup';
 import OrderConfirmation from './components/OrderConfirmation';
@@ -116,8 +115,7 @@ const App = () => {
           />
           <Route path="/login" element={<Login setRole={setRole} />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/farmer-login" element={<FarmerLogin setRole={setRole} />} />
-          <Route path="/farmer-signup" element={<FarmerSignUp />} />
+          
         </Routes>
         {showCart && (
           <CartPopup
