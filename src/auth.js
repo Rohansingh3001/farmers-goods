@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase';
+import { auth, db } from '../firebase'; // Ensure these are correctly imported
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(true);
-  const [role, setRole] = useState('customer');
+  const [role, setRole] = useState('customer'); // Default role is customer
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -32,7 +32,7 @@ const Auth = () => {
           role,
         });
 
-        // Navigate to the appropriate dashboard
+        // Redirect to the appropriate dashboard
         navigate(role === 'farmer' ? '/farmer-dashboard' : '/customer-dashboard');
       } else {
         // Login Logic
@@ -46,20 +46,19 @@ const Auth = () => {
         if (userDoc.exists()) {
           const userData = userDoc.data();
 
-          // Redirect based on role
-          if (userData.role === 'farmer') {
-            navigate('/farmer-dashboard');
-          } else if (userData.role === 'customer') {
-            navigate('/customer-dashboard');
+          // Check if the role matches the stored role
+          if (userData.role === role) {
+            // Redirect based on role
+            navigate(role === 'farmer' ? '/farmer-dashboard' : '/customer-dashboard');
           } else {
-            setError('Role mismatch. Please check your role.');
+            setError('Role mismatch. Please select the correct role.');
           }
         } else {
-          setError('No user data found for this account.');
+          setError('No user data found. Please check your credentials.');
         }
       }
     } catch (error) {
-      setError(error.message); // Show error message on failure
+      setError(error.message); // Display the error message
     }
   };
 
@@ -69,6 +68,7 @@ const Auth = () => {
         {isSignUp ? 'Sign Up' : 'Login'} as {role.charAt(0).toUpperCase() + role.slice(1)}
       </h1>
       {error && <p className="text-red-500 mb-4">{error}</p>} {/* Display error message */}
+
       {isSignUp && (
         <input
           type="text"
@@ -92,12 +92,14 @@ const Auth = () => {
         onChange={(e) => setPassword(e.target.value)}
         className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
       />
+
       <button
         onClick={handleAuth}
         className="w-full max-w-md text-white bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2"
       >
         {isSignUp ? 'Sign Up' : 'Login'}
       </button>
+
       <div className="mt-4">
         <span
           onClick={() => setIsSignUp(!isSignUp)}
@@ -106,6 +108,7 @@ const Auth = () => {
           {isSignUp ? 'Already have an account? Login' : 'Don’t have an account? Sign Up'}
         </span>
       </div>
+
       <div className="mt-4">
         <select
           value={role}

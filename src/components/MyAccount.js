@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth, db, storage } from '../firebase'; // Import your Firebase configuration
+import { auth, db, storage } from '../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import './styles.css'; // Import your CSS file
+import './styles.css'; // Custom CSS styles
 
 const MyAccount = () => {
   const [user, setUser] = useState(null);
@@ -97,100 +97,130 @@ const MyAccount = () => {
     }
   };
 
+  const handleLogout = async () => {
+    await auth.signOut();
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
+
   const renderCustomerProfile = () => (
-    <div className="space-y-4">
-      <div className="flex items-center">
-        <img
-          src={userInfo.profilePicture || '/default-avatar.png'}
-          alt="Profile"
-          className="w-24 h-24 rounded-full"
-        />
-        <input type="file" onChange={handleProfilePictureUpload} />
-        {uploading && <p>Uploading...</p>}
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h2>Customer Dashboard</h2>
+        <button className="button-logout" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
-      <div className="space-y-2">
-        <h2 className="text-xl font-bold">Customer Profile</h2>
-        <p><strong>Name:</strong> {userInfo.name}</p>
-        <p><strong>Email:</strong> {userInfo.email}</p>
-        <p><strong>Address:</strong> {userInfo.address}</p>
-        {isEditing ? (
-          <div className="space-y-2">
-            <input
-              type="text"
-              name="name"
-              value={editedInfo.name}
-              onChange={handleChange}
-              placeholder="Name"
-              className="border p-2"
-            />
-            <input
-              type="text"
-              name="address"
-              value={editedInfo.address}
-              onChange={handleChange}
-              placeholder="Address"
-              className="border p-2"
-            />
-            <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2">Save</button>
-          </div>
-        ) : (
-          <button onClick={handleEdit} className="bg-blue-500 text-white px-4 py-2">Edit</button>
-        )}
+      <div className="profile-section">
+        <div className="profile-picture">
+          <img
+            src={userInfo.profilePicture || '/default-avatar.png'}
+            alt="Profile"
+            className="rounded-full"
+          />
+          <input type="file" onChange={handleProfilePictureUpload} />
+          {uploading && <p className="uploading-text">Uploading...</p>}
+        </div>
+        <div className="profile-info">
+          <h3>Profile Information</h3>
+          {isEditing ? (
+            <div className="edit-form">
+              <input
+                type="text"
+                name="name"
+                value={editedInfo.name}
+                onChange={handleChange}
+                placeholder="Name"
+              />
+              <input
+                type="text"
+                name="address"
+                value={editedInfo.address}
+                onChange={handleChange}
+                placeholder="Address"
+              />
+              <button onClick={handleSave} className="button-save">
+                Save
+              </button>
+            </div>
+          ) : (
+            <div className="info-text">
+              <p><strong>Name:</strong> {userInfo.name}</p>
+              <p><strong>Email:</strong> {userInfo.email}</p>
+              <p><strong>Address:</strong> {userInfo.address}</p>
+              <button onClick={handleEdit} className="button-edit">
+                Edit
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 
   const renderFarmerProfile = () => (
-    <div className="space-y-4">
-      <div className="flex items-center">
-        <img
-          src={userInfo.profilePicture || '/default-avatar.png'}
-          alt="Profile"
-          className="w-24 h-24 rounded-full"
-        />
-        <input type="file" onChange={handleProfilePictureUpload} />
-        {uploading && <p>Uploading...</p>}
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h2>Farmer Dashboard</h2>
+        <button className="button-logout" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
-      <div className="space-y-2">
-        <h2 className="text-xl font-bold">Farmer Profile</h2>
-        <p><strong>Name:</strong> {userInfo.name}</p>
-        <p><strong>Email:</strong> {userInfo.email}</p>
-        <p><strong>Address:</strong> {userInfo.address}</p>
-        {isEditing ? (
-          <div className="space-y-2">
-            <input
-              type="text"
-              name="name"
-              value={editedInfo.name}
-              onChange={handleChange}
-              placeholder="Name"
-              className="border p-2"
-            />
-            <input
-              type="text"
-              name="address"
-              value={editedInfo.address}
-              onChange={handleChange}
-              placeholder="Address"
-              className="border p-2"
-            />
-            <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2">Save</button>
-          </div>
-        ) : (
-          <button onClick={handleEdit} className="bg-blue-500 text-white px-4 py-2">Edit</button>
-        )}
+      <div className="profile-section">
+        <div className="profile-picture">
+          <img
+            src={userInfo.profilePicture || '/default-avatar.png'}
+            alt="Profile"
+            className="rounded-full"
+          />
+          <input type="file" onChange={handleProfilePictureUpload} />
+          {uploading && <p className="uploading-text">Uploading...</p>}
+        </div>
+        <div className="profile-info">
+          <h3>Profile Information</h3>
+          {isEditing ? (
+            <div className="edit-form">
+              <input
+                type="text"
+                name="name"
+                value={editedInfo.name}
+                onChange={handleChange}
+                placeholder="Name"
+              />
+              <input
+                type="text"
+                name="address"
+                value={editedInfo.address}
+                onChange={handleChange}
+                placeholder="Address"
+              />
+              <button onClick={handleSave} className="button-save">
+                Save
+              </button>
+            </div>
+          ) : (
+            <div className="info-text">
+              <p><strong>Name:</strong> {userInfo.name}</p>
+              <p><strong>Email:</strong> {userInfo.email}</p>
+              <p><strong>Address:</strong> {userInfo.address}</p>
+              <button onClick={handleEdit} className="button-edit">
+                Edit
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-      <div className="space-y-4">
-        <h2 className="text-xl font-bold">Orders</h2>
+      <div className="orders-section">
+        <h3>Order Management</h3>
         {farmerOrders.length ? (
-          <ul>
+          <ul className="orders-list">
             {farmerOrders.map((order) => (
-              <li key={order.id} className="border p-4 mb-2">
+              <li key={order.id} className="order-item">
                 <p><strong>Order ID:</strong> {order.id}</p>
                 <p><strong>Status:</strong> {order.status}</p>
                 <button
                   onClick={() => handleOrderStatusChange(order.id, 'completed')}
-                  className="bg-green-500 text-white px-4 py-2"
+                  className="button-complete"
                 >
                   Mark as Completed
                 </button>
@@ -198,14 +228,14 @@ const MyAccount = () => {
             ))}
           </ul>
         ) : (
-          <p>No orders available.</p>
+          <p className="no-orders-text">No orders available.</p>
         )}
       </div>
     </div>
   );
 
   return (
-    <div className="p-4">
+    <div className="dashboard-page">
       {userInfo.role === 'farmer' ? renderFarmerProfile() : renderCustomerProfile()}
     </div>
   );

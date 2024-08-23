@@ -158,3 +158,104 @@ p {
 .shadow-lg {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
+.dashboard-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.dashboard-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-section,
+.orders-section {
+  margin-bottom: 20px;
+}
+
+.profile-picture {
+  display: flex;
+  align-items: center;
+}
+
+.profile-picture img {
+  width: 100px;
+  height: 100px;
+  margin-right: 20px;
+}
+
+.uploading-text {
+  color: #f39c12;
+  font-size: 14px;
+}
+
+.profile-info,
+.edit-form,
+.info-text {
+  margin-top: 10px;
+}
+
+.button-logout,
+.button-save,
+.button-edit,
+.button-complete {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.button-logout:hover,
+.button-save:hover,
+.button-edit:hover,
+.button-complete:hover {
+  background-color: #2980b9;
+}
+
+.orders-list {
+  list-style: none;
+  padding: 0;
+}
+
+.order-item {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.no-orders-text {
+  color: #7f8c8d;
+  font-size: 16px;
+}
+
+@media (max-width: 600px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-picture {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-picture img {
+    margin: 0 0 10px 0;
+  }
+}

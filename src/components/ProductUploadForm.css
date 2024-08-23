@@ -1,0 +1,134 @@
+/* ProductUploadForm.css */
+
+.product-upload-form {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+}
+
+.product-upload-form h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+.form-group input, 
+.form-group textarea, 
+.form-group select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus, 
+.form-group textarea:focus, 
+.form-group select:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.input-error {
+    border-color: #e63946;
+}
+
+.error-message {
+    color: #e63946;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.success-message {
+    color: #4caf50;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.upload-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background: linear-gradient(45deg, #007BFF, #1e90ff);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.upload-button:hover {
+    background: linear-gradient(45deg, #1e90ff, #007BFF);
+}
+
+.upload-button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Creative "Choose File" Button Styling */
+.file-upload {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.file-upload input[type="file"] {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+.file-upload .file-label {
+    background: linear-gradient(45deg, #007BFF, #1e90ff);
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.file-upload .file-label:hover {
+    background: linear-gradient(45deg, #1e90ff, #007BFF);
+}
