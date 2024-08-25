@@ -1,32 +1,28 @@
-import React, { useState, useEffect } from "react";
+// src/components/ThemeSwitcher.js
+import React, { useState, useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is imported
 
 const ThemeSwitcher = () => {
-    const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
     useEffect(() => {
-        if (theme === "dark") {
-            document.body.classList.add("bg-black", "text-white");
-            document.body.classList.remove("bg-white", "text-black");
-        } else {
-            document.body.classList.add("bg-white", "text-black");
-            document.body.classList.remove("bg-black", "text-white");
-        }
-        localStorage.setItem("theme", theme);
+        document.body.className = theme; // Set the body class to the current theme
+        localStorage.setItem('theme', theme); // Store the theme in local storage
     }, [theme]);
 
     const toggleTheme = () => {
-        setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+        setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
     };
 
     return (
-        <button
-            onClick={toggleTheme}
-            className={`px-4 py-2 rounded text-white ${
-                theme === "light" ? "bg-blue-500" : "bg-blue-700"
-            }`}
-        >
-            Switch to {theme === "light" ? "Dark" : "Light"} Theme
-        </button>
+        <div className="d-flex justify-content-center mt-3">
+            <button
+                onClick={toggleTheme}
+                className={`btn ${theme === 'light' ? 'btn-primary' : 'btn-secondary'}`}
+            >
+                Switch to {theme === 'light' ? 'Dark' : 'Light'} Mode
+            </button>
+        </div>
     );
 };
 
