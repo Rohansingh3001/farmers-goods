@@ -57,27 +57,27 @@ const Navbar = () => {
               <ul className="py-2">
                 <li
                   onClick={() => changeLanguage('en')}
-                  className={flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
+                  className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
                     i18n.language === 'en' ? 'bg-green-600 text-white' : 'text-gray-800'
-                  }}
+                  }`}
                 >
                   <img src="path/to/flag-en.png" alt="English" className="w-5 h-5 mr-2" />
                   English
                 </li>
                 <li
                   onClick={() => changeLanguage('hi')}
-                  className={flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
+                  className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
                     i18n.language === 'hi' ? 'bg-green-600 text-white' : 'text-gray-800'
-                  }}
+                  }`}
                 >
                   <img src="path/to/flag-hi.png" alt="Hindi" className="w-5 h-5 mr-2" />
                   हिंदी
                 </li>
                 <li
                   onClick={() => changeLanguage('bn')}
-                  className={flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
+                  className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
                     i18n.language === 'bn' ? 'bg-green-600 text-white' : 'text-gray-800'
-                  }}
+                  }`}
                 >
                   <img src="path/to/flag-be.png" alt="Bengali" className="w-5 h-5 mr-2" />
                   বাংলা
@@ -128,27 +128,27 @@ const Navbar = () => {
                 <ul className="py-2">
                   <li
                     onClick={() => changeLanguage('en')}
-                    className={flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
+                    className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
                       i18n.language === 'en' ? 'bg-green-600 text-white' : 'text-gray-800'
-                    }}
+                    }`}
                   >
                     <img src="path/to/flag-en.png" alt="English" className="w-5 h-5 mr-2" />
                     English
                   </li>
                   <li
                     onClick={() => changeLanguage('hi')}
-                    className={flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
+                    className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
                       i18n.language === 'hi' ? 'bg-green-600 text-white' : 'text-gray-800'
-                    }}
+                    }`}
                   >
                     <img src="path/to/flag-hi.png" alt="Hindi" className="w-5 h-5 mr-2" />
                     हिंदी
                   </li>
                   <li
                     onClick={() => changeLanguage('bn')}
-                    className={flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
+                    className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
                       i18n.language === 'bn' ? 'bg-green-600 text-white' : 'text-gray-800'
-                    }}
+                    }`}
                   >
                     <img src="path/to/flag-be.png" alt="Bengali" className="w-5 h-5 mr-2" />
                     বাংলা
