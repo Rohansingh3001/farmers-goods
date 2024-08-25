@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -18,6 +17,7 @@ import CartPopup from './components/CartPopup';
 import OrderConfirmation from './components/OrderConfirmation';
 import FarmerDashboard from './components/FarmerDashboard';
 import CustomerDashboard from './components/CustomerDashboard';
+import ThemeSwitcher from './components/ThemeSwitcher';
 
 import './index.css';
 import './i18n';
@@ -83,6 +83,10 @@ const App = () => {
 
   return (
     <Router>
+      <header>
+        <h1>Farmer Goods App</h1>
+        <ThemeSwitcher /> {/* Integrating ThemeSwitcher into the header */}
+      </header>
       <Navbar onCartClick={toggleCart} />
       <div className="App">
         <Routes>
@@ -115,7 +119,6 @@ const App = () => {
           />
           <Route path="/login" element={<Login setRole={setRole} />} />
           <Route path="/signup" element={<SignUp />} />
-          
         </Routes>
         {showCart && (
           <CartPopup
