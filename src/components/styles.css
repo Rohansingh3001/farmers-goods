@@ -259,3 +259,32 @@ p {
     margin: 0 0 10px 0;
   }
 }
+/* src/styles.css */
+body.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+body.dark {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+/* Additional styling */
+button {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+body.dark button {
+  background-color: #bb86fc;
+}
+
+body.light button {
+  background-color: #6200ea;
+}
+
+/* Customize theme switcher icons and layout as needed */
+
