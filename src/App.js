@@ -17,7 +17,7 @@ import CartPopup from './components/CartPopup';
 import OrderConfirmation from './components/OrderConfirmation';
 import FarmerDashboard from './components/FarmerDashboard';
 import CustomerDashboard from './components/CustomerDashboard';
-import ThemeSwitcher from './components/ThemeSwitcher';
+
 
 import './index.css';
 import './i18n';
@@ -83,12 +83,7 @@ const App = () => {
 
   return (
     <Router>
-      <header>
-        <h1>Farmer Goods App</h1>
-        <ThemeSwitcher /> {/* Integrating ThemeSwitcher into the header */}
-      </header>
-      <Navbar onCartClick={toggleCart} />
-      <div className="App">
+     
         <Routes>
           <Route path="/" element={<Home role={role} addToCart={addToCart} />} />
           <Route path="/products/fresh-vegetables" element={<FreshVegetables addToCart={addToCart} />} />
