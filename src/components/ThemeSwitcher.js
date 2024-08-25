@@ -1,6 +1,5 @@
-// src/components/ThemeSwitcher.js
 import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is imported
+import './ThemeSwitcher.css'; // Import the CSS file for custom styles
 
 const ThemeSwitcher = () => {
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
@@ -11,15 +10,12 @@ const ThemeSwitcher = () => {
     }, [theme]);
 
     const toggleTheme = () => {
-        setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+        setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
     };
 
     return (
-        <div className="d-flex justify-content-center mt-3">
-            <button
-                onClick={toggleTheme}
-                className={`btn ${theme === 'light' ? 'btn-primary' : 'btn-secondary'}`}
-            >
+        <div className="theme-switcher">
+            <button onClick={toggleTheme} className={`theme-button ${theme}`}>
                 Switch to {theme === 'light' ? 'Dark' : 'Light'} Mode
             </button>
         </div>
