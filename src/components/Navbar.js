@@ -1,19 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FaGlobe, FaSun, FaMoon } from 'react-icons/fa'; // Import icons for language and theme switcher
+import { FaGlobe } from 'react-icons/fa';
+import ThemeSwitcher from './ThemeSwitcher'; // Import ThemeSwitcher
 import './styles.css';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light'); // State for theme
   const { i18n, t } = useTranslation();
-
-  useEffect(() => {
-    document.body.className = theme;
-    localStorage.setItem('theme', theme);
-  }, [theme]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -28,10 +23,6 @@ const Navbar = () => {
     setIsLanguageDropdownOpen(false);
   };
 
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  };
-
   return (
     <nav className="bg-white border-b border-gray-200 px-4 py-2 flex justify-between items-center">
       <div className="flex items-center">
@@ -42,7 +33,7 @@ const Navbar = () => {
         <Link to="/about" className="text-gray-800 hover:text-green-600">{t('About Us')}</Link>
         <Link to="/contact" className="text-gray-800 hover:text-green-600">{t('Contact')}</Link>
         <Link to="/MyAccount" className="text-gray-800 hover:text-green-600">{t('My Account')}</Link>
-        
+
         {/* Language Dropdown */}
         <div className="relative">
           <button
@@ -57,29 +48,20 @@ const Navbar = () => {
               <ul className="py-2">
                 <li
                   onClick={() => changeLanguage('en')}
-                  className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
-                    i18n.language === 'en' ? 'bg-green-600 text-white' : 'text-gray-800'
-                  }`}
+                  className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${i18n.language === 'en' ? 'bg-green-600 text-white' : 'text-gray-800'}`}
                 >
-                  <img src="path/to/flag-en.png" alt="English" className="w-5 h-5 mr-2" />
                   English
                 </li>
                 <li
                   onClick={() => changeLanguage('hi')}
-                  className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
-                    i18n.language === 'hi' ? 'bg-green-600 text-white' : 'text-gray-800'
-                  }`}
+                  className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${i18n.language === 'hi' ? 'bg-green-600 text-white' : 'text-gray-800'}`}
                 >
-                  <img src="path/to/flag-hi.png" alt="Hindi" className="w-5 h-5 mr-2" />
                   हिंदी
                 </li>
                 <li
                   onClick={() => changeLanguage('bn')}
-                  className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
-                    i18n.language === 'bn' ? 'bg-green-600 text-white' : 'text-gray-800'
-                  }`}
+                  className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${i18n.language === 'bn' ? 'bg-green-600 text-white' : 'text-gray-800'}`}
                 >
-                  <img src="path/to/flag-be.png" alt="Bengali" className="w-5 h-5 mr-2" />
                   বাংলা
                 </li>
               </ul>
@@ -88,88 +70,15 @@ const Navbar = () => {
         </div>
 
         {/* Theme Switcher */}
-        <button
-          onClick={toggleTheme}
-          className="flex items-center space-x-2 text-gray-800 hover:text-green-600 focus:outline-none"
-        >
-          {theme === 'light' ? <FaMoon className="w-5 h-5" /> : <FaSun className="w-5 h-5" />}
-          <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-        </button>
+        <ThemeSwitcher />
       </div>
 
       {/* Mobile Menu */}
       <div className="md:hidden flex items-center">
         <button onClick={toggleMenu} className="text-gray-800 hover:text-green-600 focus:outline-none">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}></path>
-          </svg>
+          {/* Toggle button SVG */}
         </button>
       </div>
-      {isOpen && (
-        <div className="md:hidden absolute top-12 right-0 w-56 bg-white border border-gray-200 shadow-lg z-10">
-          <Link to="/" className="block px-4 py-2 text-gray-800 hover:bg-gray-100" onClick={toggleMenu}>{t('Home')}</Link>
-          <Link to="/about" className="block px-4 py-2 text-gray-800 hover:bg-gray-100" onClick={toggleMenu}>{t('About Us')}</Link>
-          <Link to="/contact" className="block px-4 py-2 text-gray-800 hover:bg-gray-100" onClick={toggleMenu}>{t('Contact')}</Link>
-          <Link to="/MyAccount" className="block px-4 py-2 text-gray-800 hover:bg-gray-100" onClick={toggleMenu}>{t('My Account')}</Link>
-          
-          {/* Language Dropdown for mobile */}
-          <div className="border-t border-gray-200 mt-2">
-            <div className="flex justify-center items-center py-2">
-              <button
-                onClick={toggleLanguageDropdown}
-                className="flex items-center space-x-2 text-gray-800 hover:text-green-600 focus:outline-none"
-              >
-                <FaGlobe className="w-5 h-5" />
-                <span>{t('Language')}</span>
-              </button>
-            </div>
-            {isLanguageDropdownOpen && (
-              <div className="bg-white w-full border border-gray-200 shadow-lg">
-                <ul className="py-2">
-                  <li
-                    onClick={() => changeLanguage('en')}
-                    className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
-                      i18n.language === 'en' ? 'bg-green-600 text-white' : 'text-gray-800'
-                    }`}
-                  >
-                    <img src="path/to/flag-en.png" alt="English" className="w-5 h-5 mr-2" />
-                    English
-                  </li>
-                  <li
-                    onClick={() => changeLanguage('hi')}
-                    className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
-                      i18n.language === 'hi' ? 'bg-green-600 text-white' : 'text-gray-800'
-                    }`}
-                  >
-                    <img src="path/to/flag-hi.png" alt="Hindi" className="w-5 h-5 mr-2" />
-                    हिंदी
-                  </li>
-                  <li
-                    onClick={() => changeLanguage('bn')}
-                    className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
-                      i18n.language === 'bn' ? 'bg-green-600 text-white' : 'text-gray-800'
-                    }`}
-                  >
-                    <img src="path/to/flag-be.png" alt="Bengali" className="w-5 h-5 mr-2" />
-                    বাংলা
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
-          
-          {/* Theme Switcher for Mobile */}
-          <div className="border-t border-gray-200 mt-2">
-            <button
-              onClick={toggleTheme}
-              className="w-full px-4 py-2 text-left flex items-center space-x-2 text-gray-800 hover:bg-gray-100 focus:outline-none"
-            >
-              {theme === 'light' ? <FaMoon className="w-5 h-5" /> : <FaSun className="w-5 h-5" />}
-              <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-            </button>
-          </div>
-        </div>
-      )}
     </nav>
   );
 };
