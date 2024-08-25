@@ -81,10 +81,7 @@ const App = () => {
     alert('Proceeding to checkout...');
   };
 
-  return (
-    <Router>
-     
-        <Routes>
+  
           <Route path="/" element={<Home role={role} addToCart={addToCart} />} />
           <Route path="/products/fresh-vegetables" element={<FreshVegetables addToCart={addToCart} />} />
           <Route path="/products/organic-fruits" element={<OrganicFruits addToCart={addToCart} />} />
