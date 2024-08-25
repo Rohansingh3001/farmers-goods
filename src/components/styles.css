@@ -270,21 +270,4 @@ body.dark {
   color: #ffffff;
 }
 
-/* Additional styling */
-button {
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-body.dark button {
-  background-color: #bb86fc;
-}
-
-body.light button {
-  background-color: #6200ea;
-}
-
-/* Customize theme switcher icons and layout as needed */
 
