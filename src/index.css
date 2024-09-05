@@ -28,4 +28,83 @@
   .button-secondary:hover {
     background-color: #5a6268;
   }
-  
+  /* Keyframes for a smoother fade-in and scaling animation */
+@keyframes fade-scale {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation for the FARMER GOODS text */
+.opening-animation h1 {
+  opacity: 0;
+  animation: fade-scale 2.5s ease-in-out forwards;
+}
+
+/* For a smoother overall appearance, ensure transitions for all elements */
+body {
+  transition: all 0.5s ease;
+}
+
+.animate-fade-in {
+  animation: fade-scale 2.5s ease-in-out;
+}
+/* Keyframes for smooth fade-in and scaling animation */
+@keyframes fade-scale {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation for the FARMER GOODS text */
+.opening-animation h1 {
+  opacity: 0;
+  animation: fade-scale 2.5s ease-in-out forwards;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Responsive font size for the text */
+.opening-animation h1 {
+  font-size: 6rem; /* For larger screens */
+}
+
+/* Adjust for mobile view */
+@media (max-width: 768px) {
+  .opening-animation h1 {
+    font-size: 3rem; /* Reduce font size for smaller screens */
+  }
+}
+
+/* Animation for the main content after the welcome animation */
+.fade-in-content {
+  opacity: 0;
+  animation: fade-in-content 1s forwards;
+}
+
+/* Keyframe for main content fade-in */
+@keyframes fade-in-content {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

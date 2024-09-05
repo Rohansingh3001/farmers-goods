@@ -1,19 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { FaGlobe, FaSun, FaMoon } from 'react-icons/fa'; // Import icons for language and theme switcher
-import './styles.css';
+import { useTranslation } from 'react-i18next'; // Import useTranslation hook
+import { FaGlobe } from 'react-icons/fa'; // Import an icon for the dropdown
+import './styles.css'; // Import your CSS file
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light'); // State for theme
-  const { i18n, t } = useTranslation();
-
-  useEffect(() => {
-    document.body.className = theme;
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false); // State for language dropdown
+  const { i18n, t } = useTranslation(); // Destructure the i18n instance and the t function
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -23,13 +17,10 @@ const Navbar = () => {
     setIsLanguageDropdownOpen(!isLanguageDropdownOpen);
   };
 
+  // Function to handle language change
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
-    setIsLanguageDropdownOpen(false);
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+    setIsLanguageDropdownOpen(false); // Close the dropdown after selecting a language
   };
 
   return (
@@ -74,9 +65,9 @@ const Navbar = () => {
                   हिंदी
                 </li>
                 <li
-                  onClick={() => changeLanguage('bn')}
+                  onClick={() => changeLanguage('be')}
                   className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
-                    i18n.language === 'bn' ? 'bg-green-600 text-white' : 'text-gray-800'
+                    i18n.language === 'be' ? 'bg-green-600 text-white' : 'text-gray-800'
                   }`}
                 >
                   <img src="path/to/flag-be.png" alt="Bengali" className="w-5 h-5 mr-2" />
@@ -86,15 +77,6 @@ const Navbar = () => {
             </div>
           )}
         </div>
-
-        {/* Theme Switcher */}
-        <button
-          onClick={toggleTheme}
-          className="flex items-center space-x-2 text-gray-800 hover:text-green-600 focus:outline-none"
-        >
-          {theme === 'light' ? <FaMoon className="w-5 h-5" /> : <FaSun className="w-5 h-5" />}
-          <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-        </button>
       </div>
 
       {/* Mobile Menu */}
@@ -156,17 +138,6 @@ const Navbar = () => {
                 </ul>
               </div>
             )}
-          </div>
-          
-          {/* Theme Switcher for Mobile */}
-          <div className="border-t border-gray-200 mt-2">
-            <button
-              onClick={toggleTheme}
-              className="w-full px-4 py-2 text-left flex items-center space-x-2 text-gray-800 hover:bg-gray-100 focus:outline-none"
-            >
-              {theme === 'light' ? <FaMoon className="w-5 h-5" /> : <FaSun className="w-5 h-5" />}
-              <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-            </button>
           </div>
         </div>
       )}

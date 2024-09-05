@@ -259,15 +259,3 @@ p {
     margin: 0 0 10px 0;
   }
 }
-/* src/styles.css */
-body.light {
-  background-color: #ffffff;
-  color: #000000;
-}
-
-body.dark {
-  background-color: #333333;
-  color: #ffffff;
-}
-
-
