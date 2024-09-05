@@ -36,3 +36,45 @@
     transform: rotate(360deg);
   }
 }
+
+/* Global theme variables */
+:root {
+  --bg-color: #f0f0f0;
+  --text-color: #333;
+  --button-bg: #007bff;
+  --button-text: white;
+}
+
+body.light {
+  --bg-color: #f0f0f0;
+  --text-color: #333;
+  --button-bg: #007bff;
+  --button-text: white;
+}
+
+body.dark {
+  --bg-color: #333;
+  --text-color: #f0f0f0;
+  --button-bg: #555;
+  --button-text: white;
+}
+
+/* Apply theme variables */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.5s, color 0.5s;
+}
+
+/* Adjust button styles based on theme */
+button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Other specific components can inherit theme colors */
+.fixed-button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+}
