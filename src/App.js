@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -12,7 +11,6 @@ import Order from './components/Order';
 import MyAccount from './components/MyAccount';
 import Login from './components/LoginPage';
 import SignUp from './components/RegisterPage';
-
 import Footer from './components/Footer';
 import CartPopup from './components/CartPopup';
 import OrderConfirmation from './components/OrderConfirmation';
@@ -31,19 +29,17 @@ const App = () => {
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
     setCartItems(storedCartItems);
-  }, []);
 
-  useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
       setUser(storedUser);
       setRole(storedUser.role);
     }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const toggleCart = () => {
     setShowCart(!showCart);
@@ -115,7 +111,6 @@ const App = () => {
           />
           <Route path="/login" element={<Login setRole={setRole} />} />
           <Route path="/signup" element={<SignUp />} />
-          
         </Routes>
         {showCart && (
           <CartPopup
