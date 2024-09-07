@@ -25,7 +25,7 @@ const DairyProducts = ({ addToCart }) => {
 
 const ProductCard = ({ product, addToCart }) => {
   const [selectedSeller, setSelectedSeller] = useState(product.sellers[0]);
-  const [quantity, setQuantity] = useState(1);
+const [quantity, setQuantity] = useState(1);    
 
   const handleSellerChange = (e) => {
     const sellerId = parseInt(e.target.value);
